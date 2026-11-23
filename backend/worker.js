@@ -25,7 +25,9 @@ function normalizeItems(items){
   for(const item of items){
     const id=Number(item.id),quantity=Number(item.qty),product=CATALOG[id];
     if(!product||!Number.isInteger(quantity)||quantity<1||quantity>99)throw new Error('Cart contains an invalid product or quantity');
-    merged.set(id,(merged.get(id)||0)+quantity);
+    const mergedQuantity=(merged.get(id)||0)+quantity;
+    if(mergedQuantity>99)throw new Error('Cart contains an invalid product quantity');
+    merged.set(id,mergedQuantity);
   }
   return [...merged.entries()].map(([id,quantity])=>{const product=CATALOG[id];return {id,quantity,product,lineTotal:round(Number(product.price)*quantity)}});
 }
@@ -78,7 +80,8 @@ function orderLinesHTML(lines){return lines.map(line=>`<li>${escapeHTML(line.pro
 function customerHTML(customer){return `${escapeHTML(customer.firstName)} ${escapeHTML(customer.lastName)}<br>${escapeHTML(customer.address)}${customer.unit?` · ${escapeHTML(customer.unit)}`:''}<br>${escapeHTML(customer.city)}, ${escapeHTML(customer.region)} ${escapeHTML(customer.postalCode)}<br>${escapeHTML(customer.country)}<br>${escapeHTML(customer.email)}`}
 async function createOrder(request,env,origin){
   const body=await request.json(); const lines=normalizeItems(body.items); const totals=calculateTotals(lines,env); const customer=customerData(body.customer);
-  if(!validEmail(customer.email))throw new Error('A valid customer email is required');
+  const requiredCustomerFields=['firstName','lastName','address','city','region','postalCode','country'];
+  if(requiredCustomerFields.some(key=>!customer[key])||!validEmail(customer.email))throw new Error('Complete customer information and a valid email are required');
   const paypalItems=lines.map(line=>({name:line.product.name,sku:line.product.sku||`MORROW-${line.id}`,unit_amount:{currency_code:'USD',value:line.product.price},quantity:String(line.quantity),category:'PHYSICAL_GOODS'}));
   const orderPayload={intent:'CAPTURE',purchase_units:[{reference_id:'morrow-cart',description:'Morrow & Co. order',amount:{currency_code:'USD',value:amount(totals.total),breakdown:{item_total:{currency_code:'USD',value:amount(totals.itemTotal)},shipping:{currency_code:'USD',value:amount(totals.shipping)},tax_total:{currency_code:'USD',value:amount(totals.tax)}}},items:paypalItems}],application_context:{user_action:'PAY_NOW',shipping_preference:'NO_SHIPPING'}};
   const order=await paypalRequest(env,'/v2/checkout/orders',{method:'POST',body:JSON.stringify(orderPayload)});
