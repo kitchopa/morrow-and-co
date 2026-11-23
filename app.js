@@ -1,43 +1,116 @@
-const products=[
- {id:1,name:'Cloud Sleep Mask',cat:'wellbeing',price:24,tag:'Best seller',desc:'Padded blackout eye cover',details:'A soft, padded eye mask for blocking light during rest or travel.',features:['Light-blocking eye cover','Adjustable head strap','Lightweight travel shape'],image:'assets/product-1.jpg',supplierStatus:'UNVERIFIED',imageNote:'Correct wearable eye-mask photo retained; CJ results checked were facial-treatment masks or a different Bluetooth model.'},
- {id:2,name:'Sip Everywhere Bottle',cat:'on-the-go',price:32,tag:'New',desc:'450 ml insulated bottle',details:'A stainless-steel insulated bottle for water on the move.',features:['450 ml capacity','Double-wall insulation','Travel-ready bottle shape'],image:'assets/product-2.jpg',supplierUrl:'https://www.cjdropshipping.com/product/smart-digital-thermal-bottle-portable-coffee-mug-stainless-steel-water-bottle-in-car-insulated-cup-keep-cold-vacuum-flasks-450ml-p-1737828106674647040.html',supplierSku:'CJJT192676801AZ',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified for a 450 ml stainless-steel insulated bottle; destination and variant must be confirmed.'},
- {id:3,name:'Rise & Rest Light',cat:'wellbeing',price:48,tag:'',desc:'Warm ambient glow',details:'A small table light for a softer corner of the day.',features:['Warm ambient light','Tabletop format','Simple shade design'],image:'assets/product-3.jpg',supplierStatus:'UNVERIFIED',imageNote:'Local catalog photo depicts a table lamp; no exact CJ listing was verified.'},
- {id:4,name:'The Tidy Tray',cat:'home',price:28,tag:'Small batch',desc:'Wooden desktop landing place',details:'A wooden tray for small objects, found through CJ’s desktop-storage listing.',features:['Wooden construction','Desktop storage use','Single-tray format'],image:'assets/product-4.jpg',supplierUrl:'https://cjdropshipping.com/product/high-grade-wooden-aromatherapy-tray-p-2503140213031618200.html',supplierSku:'CJYD232706101AZ',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified as a wooden desktop-storage tray; destination and variant must be confirmed.'},
- {id:5,name:'Pocket Power Bank',cat:'on-the-go',price:39,tag:'',desc:'10,000 mAh portable power',details:'A compact 10,000 mAh power bank with USB and USB-C input/output options.',features:['10,000 mAh capacity','USB and USB-C ports','Portable ABS casing'],image:'assets/product-5.jpg',supplierUrl:'https://cjdropshipping.com/product/essager-new-power-bank-p-7B140246-57F5-48D4-A9CB-EB21A9EB0974.html',supplierSku:'CJXFLPDC00067-White',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified for the Essager Small Jane 10000mAh power bank; destination and variant must be confirmed.'},
- {id:6,name:'Pebble Massage Ball',cat:'wellbeing',price:18,tag:'',desc:'Illustrated product placeholder',details:'Shown with an honest illustration because no exact CJ listing for this specific massage-ball shape was verified yet.',features:['Massage-ball category','Supplier match pending','Illustrated alternative'],image:'assets/product-6.jpg',supplierStatus:'UNVERIFIED',imageNote:'Illustrated alternative used; no exact CJ supplier match verified.'},
- {id:7,name:'Foldaway Market Tote',cat:'on-the-go',price:22,tag:'',desc:'Foldable travel tote',details:'A foldable Oxford-cloth travel tote with a zip opening and soft handles.',features:['Oxford-cloth body','Zip opening','Soft carry handles'],image:'assets/product-7.jpg',supplierUrl:'https://cjdropshipping.com/product/foldable-large-capacity-tote-travel-bag-p-1527483304503685120.html?from=HTP',supplierSku:'CJNS148655201AZ',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified as a foldable travel tote; destination and variant must be confirmed.'},
- {id:8,name:'Soft Focus Timer',cat:'home',price:26,tag:'',desc:'Silent rotating timer',details:'A quiet rotating timer with a clear digital display for focus sessions.',features:['Silent rotating timer','Magnetic back','Digital minute/second display'],image:'assets/product-8.jpg',supplierUrl:'https://cjdropshipping.com/product/rotating-timer-magnetic-silent-timer-p-1372840865441124352.html',supplierSku:'CJJT104845301AZ',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified as a rotating magnetic silent timer; destination and variant must be confirmed.'},
- {id:9,name:'Sunday Stretch Strap',cat:'wellbeing',price:19,tag:'New',desc:'Illustrated product placeholder',details:'Shown with an honest illustration because an exact CJ strap listing matching this product was not verified.',features:['Stretch-strap category','Supplier match pending','Illustrated alternative'],image:'assets/product-9.jpg',supplierStatus:'UNVERIFIED',imageNote:'Illustrated alternative used; CJ search returned resistance-band and ankle-strap products, not this exact strap.'},
- {id:10,name:'Cable Keepers',cat:'home',price:14,tag:'',desc:'Set of six magnetic cable clips',details:'Small ABS cable clips that keep charging leads close to the desk instead of behind it.',features:['Set of six','Magnetic cable hold','ABS construction'],image:'assets/product-10.jpg',supplierUrl:'https://cjdropshipping.com/product/magnetic-cable-clip-under-desk-cable-management-adjustable-cord-holder-wire-organizer-and-cable-management-wire-keeper-p-1763402968205897728.html',supplierSku:'CJYD197888515OL',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified for six-piece magnetic cable clips; destination and variant must be confirmed.'},
- {id:11,name:'Cupholder Carry Mug',cat:'on-the-go',price:29,tag:'',desc:'350 ml foldable coffee cup',details:'A foldable, leak-resistant silicone coffee cup for commutes and car cupholders.',features:['Food-grade silicone','301–400 ml category','Foldable cup design'],image:'assets/product-11.jpg',supplierUrl:'https://cjdropshipping.com/product/retractable-silicone-portable-leak-proof-car-coffee-cup-p-1400300694791131136.html',supplierSku:'CJHS115718201AZ',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified as a foldable silicone car coffee cup; destination and variant must be confirmed.'},
- {id:12,name:'Breathe Mini Fan',cat:'on-the-go',price:25,tag:'',desc:'USB rechargeable pocket fan',details:'A small foldable fan for commutes, stuffy desks, and warm days outside.',features:['Five speed settings','USB rechargeable','Foldable handheld design'],image:'assets/product-12.jpg',supplierUrl:'https://cjdropshipping.com/product/usb-handheld-mini-fan-foldable-portable-neck-hanging-fans-5-speed-usb-rechargeable-fan-with-display-screen-p-1669594923043139584.html',supplierSku:'CJJT177988401AZ',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified for a foldable USB handheld fan; destination and variant must be confirmed.'},
- {id:13,name:'Daily Notes Pad',cat:'home',price:16,tag:'',desc:'100-page notebook',details:'A simple notebook with a pen slot for priorities, small wins, and tomorrow’s list.',features:['100 pages','Pen-slot design','A6/B5 size options'],image:'assets/product-13.png',supplierUrl:'https://eur.cjdropshipping.com/product/notepad-simple-notebook-with-pen-notebook-business-creative-diary-a6-can-be-wholesale-customized-p-F3F2A563-8FC9-457F-BBBF-CDC385EECB97.html',supplierSku:'CJJSBGBG00125-White-B5',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified for a simple notebook with pen slot; destination and variant must be confirmed.'},
- {id:14,name:'Easy Pour Oil Bottle',cat:'home',price:30,tag:'',desc:'550 ml pour-and-spray bottle',details:'A glass kitchen bottle that supports both pouring and spraying oil.',features:['550 ml glass bottle','Pour and spray modes','Wide opening for cleaning'],image:'assets/product-14.jpg',supplierUrl:'https://cjdropshipping.com/product/2-in-1-oil-sprayer-bottle-bbq-cooking-oil-dispenser-olive-oil-pourers-sprayer-kitchen-baking-oil-mister-vinegar-bottle-p-1715574082122551296.html',supplierSku:'CJYD187611401AZ',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified for a 550 ml glass oil sprayer/pourer; destination and variant must be confirmed.'},
- {id:15,name:'Calm Earplugs',cat:'wellbeing',price:21,tag:'',desc:'Reusable earplugs with case',details:'Reusable earplugs in a compact carry case for travel and shared spaces.',features:['Reusable earplugs','Compact carry case','Supplier match pending'],image:'assets/product-15.jpg',supplierStatus:'UNVERIFIED',imageNote:'Local catalog photo depicts earplugs; no exact CJ listing was verified.'},
- {id:16,name:'Entryway Key Hook',cat:'home',price:34,tag:'',desc:'Wooden wall key holder',details:'A polished wood or bamboo wall holder for keys and leaving-the-house essentials.',features:['Wood/bamboo construction','Polished surface','Wall-mounted storage'],image:'assets/product-16.jpg',supplierUrl:'https://cjdropshipping.com/product/wall-mounted-wood-key-holder-p-2411210258171626500.html',supplierSku:'CJYD220248101AZ',supplierStatus:'VERIFIED',shippingNote:'CJ listing verified as a wall-mounted wood key holder; destination and variant must be confirmed.'}
-];
-// Every item is discounted by 11% from its original listed price.
-products.forEach(product=>product.price=Number((product.price*.89).toFixed(2)));
+const {products,PAYPAL_LINKS}=window.MORROW_CATALOG;
+const productById=id=>products.find(product=>product.id===Number(id));
+const money=value=>`$${Number(value).toFixed(2)}`;
+const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+const placeholderImage=name=>`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900"><rect width="900" height="900" fill="#e7e4db"/><text x="450" y="430" text-anchor="middle" fill="#20241d" font-family="Arial" font-size="28">${name}</text><text x="450" y="475" text-anchor="middle" fill="#74766c" font-family="Arial" font-size="18">Image unavailable</text></svg>`)}`;
+let filter='all';
+let query='';
+let sort='featured';
+let cart=loadCart();
+const grid=document.querySelector('#product-grid');
 
-// Paste only verified PayPal payment URLs in PAYPAL_LINKS below.
-// Never place private API keys, passwords, or payment credentials in this file.
-// Paste verified PayPal payment URLs here. Leave a product blank until its link exists.
-const PAYPAL_LINKS={1:'https://www.paypal.com/ncp/payment/TJSUNV3FF9APG',2:'https://www.paypal.com/ncp/payment/KAG9YC2BKGAX6',3:'https://www.paypal.com/ncp/payment/ALESK97UA37CN',4:'https://www.paypal.com/ncp/payment/9YG62HAE2Q3H6',5:'https://www.paypal.com/ncp/payment/686WRV2E3LTKW',6:'https://www.paypal.com/ncp/payment/NDBA3YE64HSAA',7:'https://www.paypal.com/ncp/payment/JAM92MPQ7LXD4',8:'https://www.paypal.com/ncp/payment/CY7GHSNF4J7WG',9:'https://www.paypal.com/ncp/payment/754J7F8T388HA',10:'https://www.paypal.com/ncp/payment/WGNZ2DH4QSLGN',11:'https://www.paypal.com/ncp/payment/T9N2TPPHGYJKU',12:'https://www.paypal.com/ncp/payment/BM8VGR7AQJRJJ',13:'https://www.paypal.com/ncp/payment/SS9BT64LEH6KC',14:'https://www.paypal.com/ncp/payment/D8M5XV62VENJ8',15:'https://www.paypal.com/ncp/payment/RGP8W9V8S86SC',16:'https://www.paypal.com/ncp/payment/79PBFBQVT2TPG'};
-const PAYPAL_CART_LINK='';
-const PAYPAL_LINKS_READY=Object.values(PAYPAL_LINKS).filter(Boolean).length;
-let cart=JSON.parse(localStorage.getItem('morrow-cart')||'[]');let filter='all';
-const grid=document.querySelector('#product-grid'); const money=n=>`$${n.toFixed(2)}`;
-function renderProducts(){let list=filter==='all'?products:products.filter(p=>p.cat===filter);grid.innerHTML=list.map(p=>`<article class="product"><div class="product-image" data-detail="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<img src="${p.image}" alt="${p.name}" loading="lazy"><button class="button dark quick-add" data-id="${p.id}">Add to bag <span>+</span></button></div><div class="product-info"><div><h3>${p.name}</h3><p>${p.desc}</p><button class="buy-now" data-buy-now="${p.id}">Buy now ↗</button></div><strong>${money(p.price)}</strong></div></article>`).join('')}
-const placeholderImage=name=>`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900"><rect width="900" height="900" fill="#e7e4db"/><text x="450" y="430" text-anchor="middle" fill="#20241d" font-family="Arial" font-size="28">${name}</text><text x="450" y="475" text-anchor="middle" fill="#74766c" font-family="Arial" font-size="18">Image coming soon</text></svg>`)}`;
-function renderCart(){const validCart=cart.filter(i=>products.some(p=>p.id===i.id)&&Number.isInteger(i.qty)&&i.qty>0);cart=validCart;const items=cart.map(i=>({...products.find(p=>p.id===i.id),qty:i.qty}));const count=cart.reduce((a,i)=>a+i.qty,0);document.querySelector('#cart-count').textContent=count;document.querySelector('#drawer-count').textContent=`(${count})`;document.querySelector('#subtotal').textContent=money(items.reduce((s,i)=>s+i.price*i.qty,0));document.querySelector('#cart-items').innerHTML=items.length?items.map(i=>`<div class="cart-item"><img src="${i.image}" alt="${i.name}" loading="lazy"><div><h3>${i.name}</h3><p>${money(i.price)} · Qty ${i.qty}</p><div class="cart-actions"><button data-qty="${i.id}" data-change="-1" aria-label="Decrease ${i.name} quantity">−</button><button data-qty="${i.id}" data-change="1" aria-label="Increase ${i.name} quantity">+</button><button data-remove="${i.id}">Remove</button></div></div><strong>${money(i.price*i.qty)}</strong></div>`).join(''):'<p class="empty-state">Your bag is waiting for something good.</p>';localStorage.setItem('morrow-cart',JSON.stringify(cart))}
-function add(id){if(!products.some(p=>p.id===id))return;let item=cart.find(i=>i.id===id);item?item.qty++:cart.push({id,qty:1});renderCart();showToast('Added to your bag')}
-function toggleCart(open){document.querySelector('.cart-drawer').classList.toggle('open',open);document.querySelector('.overlay').classList.toggle('show',open);document.querySelector('.cart-drawer').setAttribute('aria-hidden',!open)}
-function openCheckout(id){const link=PAYPAL_LINKS[id];if(!link){showToast('PayPal checkout is not configured for this product yet.');return}showToast('Opening secure PayPal checkout…');window.location.assign(link)}
-function showDetails(id){const p=products.find(x=>x.id===id),dialog=document.querySelector('#product-dialog'),features=p.features||['Designed for everyday use','Made with durable materials','Easy to care for'];const source=p.supplierUrl?`<p class="shipping-note">${p.shippingNote||'Supplier listing reference recorded.'}</p><a class="text-link" href="${p.supplierUrl}" target="_blank" rel="noopener">View supplier listing ↗</a><small class="supplier-sku">SKU: ${p.supplierSku||'not recorded'}</small>`:p.imageNote?`<p class="shipping-note">${p.imageNote}</p>`:'';document.querySelector('#product-detail').innerHTML=`<div class="detail-wrap"><img src="${p.image}" alt="${p.name}"><div class="detail-copy"><p class="eyebrow">${p.cat.replace('-',' + ')}</p><h2>${p.name}</h2><div class="detail-price">${money(p.price)}</div><p>${p.details||p.desc+'. A considered everyday essential.'}</p><ul>${features.map(f=>`<li>${f}</li>`).join('')}</ul>${source}<button class="button dark" data-id="${p.id}">Add to bag <span>+</span></button><button class="buy-now detail-buy" data-buy-now="${p.id}">Buy now ↗</button></div></div>`;dialog.showModal()}
-let toastTimer;function showToast(msg){const t=document.querySelector('.toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
-document.addEventListener('click',e=>{const buyId=+e.target.closest('[data-buy-now]')?.dataset.buyNow;if(buyId){openCheckout(buyId);return}const id=+e.target.closest('[data-id]')?.dataset.id;if(id){add(id);const dialog=document.querySelector('#product-dialog');if(dialog.open)dialog.close()}const detail=+e.target.closest('[data-detail]')?.dataset.detail;if(detail&&!e.target.closest('button'))showDetails(detail);const qtyButton=e.target.closest('[data-qty]');if(qtyButton){const item=cart.find(i=>i.id===+qtyButton.dataset.qty);if(item)item.qty+=Number(qtyButton.dataset.change);renderCart();return}const remove=+e.target.dataset.remove;if(remove){cart=cart.filter(i=>i.id!==remove);renderCart()}if(e.target.matches('.cart-trigger'))toggleCart(true);if(e.target.matches('.close-cart,.overlay'))toggleCart(false);if(e.target.matches('.dialog-close'))document.querySelector('#product-dialog').close();if(e.target.matches('.filters button')){document.querySelector('.filters .active').classList.remove('active');e.target.classList.add('active');filter=e.target.dataset.filter;renderProducts()}if(e.target.matches('#view-all')){filter='all';document.querySelector('.filters .active').classList.remove('active');document.querySelector('[data-filter="all"]').classList.add('active');renderProducts();document.querySelector('#shop').scrollIntoView()}});
-document.querySelector('#search-input').addEventListener('input',e=>{const query=e.target.value.trim().toLowerCase();const list=products.filter(p=>`${p.name} ${p.desc} ${p.cat}`.toLowerCase().includes(query));grid.innerHTML=list.length?list.map(p=>`<article class="product"><div class="product-image" data-detail="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<img src="${p.image}" alt="${p.name}" loading="lazy"><button class="button dark quick-add" data-id="${p.id}">Add to bag <span>+</span></button></div><div class="product-info"><div><h3>${p.name}</h3><p>${p.desc}</p><button class="buy-now" data-buy-now="${p.id}">Buy now ↗</button></div><strong>${money(p.price)}</strong></div></article>`).join(''):'<p class="empty-state">No products matched that search.</p>';document.querySelector('#shop').scrollIntoView({behavior:'smooth',block:'start'})});
-document.addEventListener('error',e=>{const image=e.target;if(image.tagName==='IMG'&&!image.dataset.fallback){image.dataset.fallback='true';image.src=placeholderImage(image.alt||'Morrow & Co. product')}},true);
-document.querySelector('#checkout').addEventListener('click',()=>{if(!cart.length)return showToast('Your bag is empty.');if(PAYPAL_CART_LINK){window.location.assign(PAYPAL_CART_LINK);return}if(cart.length===1){openCheckout(cart[0].id);return}showToast(`PayPal checkout is ready for ${PAYPAL_LINKS_READY} products. Buy one item at a time until a cart link is configured.`)});
-document.querySelector('#newsletter-form').addEventListener('submit',e=>{e.preventDefault();document.querySelector('#form-message').textContent='You’re on the list — welcome to Morrow.';e.target.reset()});
+function loadCart(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem('morrow-cart')||'[]');
+    return Array.isArray(parsed)?parsed.filter(item=>productById(item.id)&&Number.isInteger(item.qty)&&item.qty>0).map(item=>({id:Number(item.id),qty:Math.min(item.qty,99)})):[];
+  }catch{return []}
+}
+function saveCart(){localStorage.setItem('morrow-cart',JSON.stringify(cart))}
+function cartCount(){return cart.reduce((total,item)=>total+item.qty,0)}
+function cartSubtotal(){return cart.reduce((total,item)=>total+(productById(item.id).price*item.qty),0)}
+function listProducts(){
+  let list=products.filter(product=>filter==='all'||product.cat===filter);
+  if(query)list=list.filter(product=>`${product.name} ${product.desc} ${product.cat}`.toLowerCase().includes(query));
+  if(sort==='price-low')list.sort((a,b)=>a.price-b.price);
+  if(sort==='price-high')list.sort((a,b)=>b.price-a.price);
+  if(sort==='name')list.sort((a,b)=>a.name.localeCompare(b.name));
+  return list;
+}
+function productCard(product){
+  return `<article class="product"><div class="product-image" data-detail="${product.id}">${product.tag?`<span class="tag">${escapeHTML(product.tag)}</span>`:''}<img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}" loading="lazy"><button class="button dark quick-add" data-add="${product.id}">Add to bag <span>+</span></button></div><div class="product-info"><div><h3>${escapeHTML(product.name)}</h3><p>${escapeHTML(product.desc)}</p><button class="buy-now" data-buy-now="${product.id}">Buy now ↗</button></div><strong>${money(product.price)}</strong></div></article>`;
+}
+function renderProducts(){
+  const list=listProducts();
+  grid.innerHTML=list.length?list.map(productCard).join(''):'<p class="empty-state">No products matched that search.</p>';
+}
+function renderCart(){
+  const count=cartCount();
+  document.querySelector('#cart-count').textContent=count;
+  document.querySelector('#drawer-count').textContent=`(${count})`;
+  document.querySelector('#subtotal').textContent=money(cartSubtotal());
+  document.querySelector('#cart-items').innerHTML=cart.length?cart.map(item=>{
+    const product=productById(item.id);
+    return `<div class="cart-item"><img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}" loading="lazy"><div class="cart-item-copy"><h3>${escapeHTML(product.name)}</h3><p>${money(product.price)} each · Line total ${money(product.price*item.qty)}</p><div class="cart-actions"><button data-qty="${product.id}" data-change="-1" aria-label="Decrease ${escapeHTML(product.name)} quantity">−</button><output aria-label="${escapeHTML(product.name)} quantity">${item.qty}</output><button data-qty="${product.id}" data-change="1" aria-label="Increase ${escapeHTML(product.name)} quantity">+</button><button data-remove="${product.id}">Remove</button></div></div><strong>${money(product.price*item.qty)}</strong></div>`;
+  }).join(''):'<p class="empty-state">Your bag is waiting for something good.</p>';
+  document.querySelector('#clear-cart').disabled=!cart.length;
+  saveCart();
+}
+function addToCart(id,quantity=1){
+  const product=productById(id); if(!product)return;
+  const item=cart.find(entry=>entry.id===product.id);
+  if(item)item.qty=Math.min(99,item.qty+Math.max(1,Number(quantity)||1));
+  else cart.push({id:product.id,qty:Math.min(99,Math.max(1,Number(quantity)||1))});
+  renderCart(); showToast(`${product.name} added to your bag`);
+}
+function changeQuantity(id,delta){
+  const item=cart.find(entry=>entry.id===Number(id)); if(!item)return;
+  item.qty=Math.max(0,Math.min(99,item.qty+Number(delta)));
+  cart=cart.filter(entry=>entry.qty>0); renderCart();
+}
+function removeFromCart(id){cart=cart.filter(item=>item.id!==Number(id));renderCart()}
+function toggleCart(open){
+  document.querySelector('.cart-drawer').classList.toggle('open',open);
+  document.querySelector('.overlay').classList.toggle('show',open);
+  document.querySelector('.cart-drawer').setAttribute('aria-hidden',String(!open));
+}
+function showToast(message){
+  const toast=document.querySelector('.toast'); toast.textContent=message; toast.classList.add('show');
+  clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>toast.classList.remove('show'),2600);
+}
+function openCheckout(){
+  if(!cart.length){showToast('Your bag is empty.');return}
+  window.location.assign('checkout.html');
+}
+function openSingleCheckout(id){
+  const link=PAYPAL_LINKS[id];
+  if(link){showToast('Opening PayPal fallback checkout…');window.location.assign(link)}
+  else showToast('The PayPal fallback for this product is not configured.');
+}
+function showDetails(id){
+  const product=productById(id); if(!product)return;
+  const dialog=document.querySelector('#product-dialog');
+  const features=product.features||[];
+  const source=product.supplierUrl?`<p class="shipping-note">${escapeHTML(product.shippingNote||'Supplier listing reference recorded.')}</p><a class="text-link" href="${escapeHTML(product.supplierUrl)}" target="_blank" rel="noopener">View supplier listing ↗</a><small class="supplier-sku">SKU: ${escapeHTML(product.supplierSku||'not recorded')}</small>`:`<p class="shipping-note">${escapeHTML(product.imageNote||'Supplier match not verified.')}</p>`;
+  const related=products.filter(item=>item.id!==product.id&&item.cat===product.cat).slice(0,3).map(item=>`<button class="related-card" data-detail="${item.id}"><img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}"><span>${escapeHTML(item.name)}</span></button>`).join('');
+  document.querySelector('#product-detail').innerHTML=`<div class="detail-wrap"><button class="detail-image-button" data-expand-image="${escapeHTML(product.image)}" data-expand-alt="${escapeHTML(product.name)}"><img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}"><span>View larger</span></button><div class="detail-copy"><p class="eyebrow">${escapeHTML(product.cat.replace('-',' + '))}</p><h2>${escapeHTML(product.name)}</h2><div class="detail-price">${money(product.price)}</div><p>${escapeHTML(product.details||product.desc)}</p><ul>${features.map(feature=>`<li>${escapeHTML(feature)}</li>`).join('')}</ul>${source}<div class="detail-purchase"><label for="detail-qty">Quantity</label><div class="quantity-control"><button type="button" data-detail-qty="-1" aria-label="Decrease quantity">−</button><input id="detail-qty" inputmode="numeric" pattern="[0-9]*" value="1" min="1" max="99" aria-label="Quantity"><button type="button" data-detail-qty="1" aria-label="Increase quantity">+</button></div><button class="button dark" data-detail-add="${product.id}">Add to bag <span>+</span></button><button class="buy-now detail-buy" data-buy-now="${product.id}">Buy now ↗</button></div></div></div><div class="detail-trust"><span>Secure payment via PayPal</span><span>Shipping shown before payment</span></div>${related?`<div class="related"><p class="eyebrow">YOU MAY ALSO LIKE</p><div class="related-grid">${related}</div></div>`:''}`;
+  if(dialog.showModal)dialog.showModal();else dialog.setAttribute('open','');
+}
+function openExpandedImage(src,alt){
+  const dialog=document.querySelector('#image-dialog'); const image=document.querySelector('#expanded-image'); image.src=src; image.alt=alt; if(dialog.showModal)dialog.showModal();else dialog.setAttribute('open','');
+}
+function toggleMobileMenu(force){const menu=document.querySelector('#mobile-menu');const open=force===undefined?!menu.classList.contains('open'):force;menu.classList.toggle('open',open);menu.setAttribute('aria-hidden',String(!open));document.querySelector('#menu-toggle').setAttribute('aria-expanded',String(open));}
+
+document.addEventListener('click',event=>{
+  const target=event.target;
+  const buyNow=target.closest('[data-buy-now]'); if(buyNow){openSingleCheckout(Number(buyNow.dataset.buyNow));return}
+  const add=target.closest('[data-add]'); if(add){addToCart(Number(add.dataset.add));return}
+  const detailAdd=target.closest('[data-detail-add]'); if(detailAdd){addToCart(Number(detailAdd.dataset.detailAdd),Number(document.querySelector('#detail-qty')?.value)||1);document.querySelector('#product-dialog').close();return}
+  const detailQty=target.closest('[data-detail-qty]'); if(detailQty){const input=document.querySelector('#detail-qty');input.value=Math.max(1,Math.min(99,(Number(input.value)||1)+Number(detailQty.dataset.detailQty)));return}
+  const detail=target.closest('[data-detail]'); if(detail&&!target.closest('button')){showDetails(detail.dataset.detail);return}
+  const image=target.closest('[data-expand-image]'); if(image){openExpandedImage(image.dataset.expandImage,image.dataset.expandAlt);return}
+  const qty=target.closest('[data-qty]'); if(qty){changeQuantity(qty.dataset.qty,qty.dataset.change);return}
+  const remove=target.closest('[data-remove]'); if(remove){removeFromCart(remove.dataset.remove);return}
+  if(target.closest('#clear-cart')){if(cart.length&&window.confirm('Clear every item from your bag?')){cart=[];renderCart();}return}
+  if(target.closest('.cart-trigger')){toggleCart(true);return}
+  if(target.closest('.close-cart,.overlay')){toggleCart(false);return}
+  if(target.closest('.dialog-close')){target.closest('dialog')?.close();return}
+  const filterButton=target.closest('[data-filter]'); if(filterButton){document.querySelector('.filters .active')?.classList.remove('active');filterButton.classList.add('active');filter=filterButton.dataset.filter;renderProducts();return}
+  if(target.closest('#view-all')){filter='all';query='';document.querySelector('#search-input').value='';document.querySelector('.filters .active')?.classList.remove('active');document.querySelector('[data-filter="all"]').classList.add('active');renderProducts();document.querySelector('#shop').scrollIntoView();return}
+  const mobileLink=target.closest('.mobile-menu a'); if(mobileLink)toggleMobileMenu(false);
+});
+document.querySelector('#search-input').addEventListener('input',event=>{query=event.target.value.trim().toLowerCase();renderProducts()});
+document.querySelector('#sort-products').addEventListener('change',event=>{sort=event.target.value;renderProducts()});
+document.querySelector('#checkout').addEventListener('click',openCheckout);
+document.querySelector('#menu-toggle').addEventListener('click',()=>toggleMobileMenu());
+document.addEventListener('error',event=>{const image=event.target;if(image.tagName==='IMG'&&!image.dataset.fallback){image.dataset.fallback='true';image.src=placeholderImage(image.alt||'Morrow & Co. product')}},true);
 renderProducts();renderCart();

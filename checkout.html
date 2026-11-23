@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Review your Morrow & Co. order securely before payment." />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://www.paypal.com https://www.paypalobjects.com; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.paypal.com https://www.paypalobjects.com; frame-src https://www.paypal.com https://www.sandbox.paypal.com;" />
+    <title>Review checkout | Morrow &amp; Co.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="checkout.css" />
+  </head>
+  <body class="checkout-page">
+    <div class="announcement">Considered tools for the everyday <span>✦</span> Secure PayPal checkout</div>
+    <main class="checkout-shell">
+      <div class="checkout-heading"><div><p class="checkout-kicker">MORROW &amp; CO. / CHECKOUT</p><h1>Review your<br><em>order.</em></h1></div><a href="index.html#shop">← Continue shopping</a></div>
+      <div id="checkout-root"></div>
+      <p class="checkout-footer">Your payment is handled by PayPal. The store never receives or stores your card details. Shipping and any applicable taxes are shown only when configured by the store.</p>
+    </main>
+    <script src="catalog.js?v=1"></script>
+    <script src="checkout-config.js?v=1"></script>
+    <script src="checkout.js?v=1"></script>
+  </body>
+</html>

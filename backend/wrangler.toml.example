@@ -1,0 +1,18 @@
+name = "morrow-co-payments"
+main = "worker.js"
+compatibility_date = "2026-11-23"
+
+[vars]
+ALLOWED_ORIGIN = "https://kitchopa.github.io"
+PAYPAL_API_BASE = "https://api-m.sandbox.paypal.com"
+SHIPPING_AMOUNT = "0.00"
+TAX_AMOUNT = "0.00"
+
+[[kv_namespaces]]
+binding = "ORDERS"
+id = "replace-with-production-kv-id"
+preview_id = "replace-with-preview-kv-id"
+
+# Set these with `wrangler secret put`; never commit them:
+# PAYPAL_CLIENT_ID
+# PAYPAL_CLIENT_SECRET

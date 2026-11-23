@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kitchopa.github.io/morrow-and-co/sitemap.xml
