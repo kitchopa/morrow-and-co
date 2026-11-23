@@ -17,9 +17,12 @@ for(const product of products){
   assert.match(product.image,/^assets\/product-\d+\.(jpg|png)$/,'product image must be a local asset');
 }
 assert.match(read('index.html'),/id="checkout"/,'home page must expose checkout behavior');
-assert.match(read('app.js'),/checkout\.html/,'home page checkout action must route to checkout');
+assert.match(read('app.js'),/data-buy-now/,'home page must expose Buy Now controls');
+assert.match(read('app.js'),/function openSingleCheckout[\s\S]*addToCart[\s\S]*checkout\.html/,'Buy Now must merge into the cart and route to unified checkout');
+assert.doesNotMatch(read('app.js'),/window\.location\.assign\(link\)/,'Buy Now must not bypass the unified cart with a legacy link');
 assert.match(read('checkout.html'),/checkout\.js/,'checkout page must load checkout behavior');
 assert.match(read('checkout.js'),/createOrder/,'checkout must implement PayPal createOrder path');
+assert.match(read('checkout.js'),/enable-funding=card/,'checkout must request eligible PayPal card funding');
 assert.match(read('backend/worker.js'),/v2\/checkout\/orders/,'backend must use PayPal Orders API');
 assert.match(read('backend/worker.js'),/api\/contact/,'backend must expose the support endpoint');
 assert.match(read('policies.html'),/contact-form/,'policies page must expose the support form');

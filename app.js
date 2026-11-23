@@ -1,4 +1,4 @@
-const {products,PAYPAL_LINKS}=window.MORROW_CATALOG;
+const {products}=window.MORROW_CATALOG;
 const productById=id=>products.find(product=>product.id===Number(id));
 const money=value=>`$${Number(value).toFixed(2)}`;
 const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
@@ -45,12 +45,18 @@ function renderCart(){
   document.querySelector('#clear-cart').disabled=!cart.length;
   saveCart();
 }
+function normalizeQuantity(value){
+  const quantity=Number(value);
+  return Number.isFinite(quantity)?Math.min(99,Math.max(1,Math.floor(quantity))):1;
+}
 function addToCart(id,quantity=1){
-  const product=productById(id); if(!product)return;
+  const product=productById(id); if(!product)return false;
+  quantity=normalizeQuantity(quantity);
   const item=cart.find(entry=>entry.id===product.id);
-  if(item)item.qty=Math.min(99,item.qty+Math.max(1,Number(quantity)||1));
-  else cart.push({id:product.id,qty:Math.min(99,Math.max(1,Number(quantity)||1))});
+  if(item)item.qty=Math.min(99,item.qty+quantity);
+  else cart.push({id:product.id,qty:quantity});
   renderCart(); showToast(`${product.name} added to your bag`);
+  return true;
 }
 function changeQuantity(id,delta){
   const item=cart.find(entry=>entry.id===Number(id)); if(!item)return;
@@ -71,10 +77,12 @@ function openCheckout(){
   if(!cart.length){showToast('Your bag is empty.');return}
   window.location.assign('checkout.html');
 }
-function openSingleCheckout(id){
-  const link=PAYPAL_LINKS[id];
-  if(link){showToast('Opening PayPal fallback checkout…');window.location.assign(link)}
-  else showToast('The PayPal fallback for this product is not configured.');
+function openSingleCheckout(id,quantity=1){
+  if(!addToCart(id,quantity)){
+    showToast('This product is unavailable.');
+    return;
+  }
+  window.location.assign('checkout.html');
 }
 function showDetails(id){
   const product=productById(id); if(!product)return;
@@ -92,7 +100,7 @@ function toggleMobileMenu(force){const menu=document.querySelector('#mobile-menu
 
 document.addEventListener('click',event=>{
   const target=event.target;
-  const buyNow=target.closest('[data-buy-now]'); if(buyNow){openSingleCheckout(Number(buyNow.dataset.buyNow));return}
+  const buyNow=target.closest('[data-buy-now]'); if(buyNow){const detailQuantity=buyNow.closest('#product-dialog')?normalizeQuantity(document.querySelector('#detail-qty')?.value):1;openSingleCheckout(Number(buyNow.dataset.buyNow),detailQuantity);return}
   const add=target.closest('[data-add]'); if(add){addToCart(Number(add.dataset.add));return}
   const detailAdd=target.closest('[data-detail-add]'); if(detailAdd){addToCart(Number(detailAdd.dataset.detailAdd),Number(document.querySelector('#detail-qty')?.value)||1);document.querySelector('#product-dialog').close();return}
   const detailQty=target.closest('[data-detail-qty]'); if(detailQty){const input=document.querySelector('#detail-qty');input.value=Math.max(1,Math.min(99,(Number(input.value)||1)+Number(detailQty.dataset.detailQty)));return}
