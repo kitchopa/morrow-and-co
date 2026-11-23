@@ -137,6 +137,7 @@ export default {async fetch(request,env){
   if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{'access-control-allow-origin':origin,'access-control-allow-credentials':'true','access-control-allow-methods':'POST,GET,OPTIONS','access-control-allow-headers':'content-type','vary':'Origin'}});
   if(!validOrigin(request,env))return json({error:'Origin not allowed'},403,origin);
   const url=new URL(request.url);
+  if(url.pathname==='/'&&request.method==='GET')return json({ok:true,service:'morrow-co-payments',environment:'sandbox',health:'/api/health'},200,origin);
   if(url.pathname==='/api/health'&&request.method==='GET')return json({ok:true,paymentConfigured:paymentMissing(env).length===0,contactConfigured:contactMissing(env).length===0,paymentMissing:paymentMissing(env),contactMissing:contactMissing(env)},200,origin);
   try{
     if(url.pathname==='/api/contact'&&request.method==='POST'){
