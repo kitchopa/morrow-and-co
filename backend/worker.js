@@ -50,6 +50,7 @@ async function paypalRequest(env,path,options={}){
   if(!response.ok)throw new Error(data?.message||'PayPal request failed');
   return data;
 }
+async function requestFingerprint(value){return fingerprint(`morrow-request:${value}`)}
 async function sendEmail(env,{to,subject,replyTo,html}){
   if(!env.RESEND_API_KEY||!env.RESEND_FROM)return {status:'not_configured'};
   const response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{authorization:`Bearer ${env.RESEND_API_KEY}`,'content-type':'application/json'},body:JSON.stringify({from:env.RESEND_FROM,to:[to],reply_to:replyTo,subject,html})});
@@ -82,20 +83,39 @@ async function createOrder(request,env,origin){
   const body=await request.json(); const lines=normalizeItems(body.items); const totals=calculateTotals(lines,env); const customer=customerData(body.customer);
   const requiredCustomerFields=['firstName','lastName','address','city','region','postalCode','country'];
   if(requiredCustomerFields.some(key=>!customer[key])||!validEmail(customer.email))throw new Error('Complete customer information and a valid email are required');
+  const idempotencyKey=text(request.headers.get('Idempotency-Key')||body.idempotencyKey);
+  if(idempotencyKey.length<16||idempotencyKey.length>200)throw new Error('A valid idempotency key is required');
+  const idempotencyHash=await requestFingerprint(idempotencyKey);
+  const requestRecordKey=`request:${idempotencyHash}`;
+  const requestFingerprintValue=await requestFingerprint(JSON.stringify({lines,customer,totals}));
+  const previous=await env.ORDERS.get(requestRecordKey,'json');
+  if(previous){
+    if(previous.requestFingerprint!==requestFingerprintValue)throw new Error('Idempotency key was already used for a different order');
+    return json(previous.response,200,origin);
+  }
+  const internalOrderId=crypto.randomUUID();
   const paypalItems=lines.map(line=>({name:line.product.name,sku:line.product.sku||`MORROW-${line.id}`,unit_amount:{currency_code:'USD',value:line.product.price},quantity:String(line.quantity),category:'PHYSICAL_GOODS'}));
-  const orderPayload={intent:'CAPTURE',purchase_units:[{reference_id:'morrow-cart',description:'Morrow & Co. order',amount:{currency_code:'USD',value:amount(totals.total),breakdown:{item_total:{currency_code:'USD',value:amount(totals.itemTotal)},shipping:{currency_code:'USD',value:amount(totals.shipping)},tax_total:{currency_code:'USD',value:amount(totals.tax)}}},items:paypalItems}],application_context:{user_action:'PAY_NOW',shipping_preference:'NO_SHIPPING'}};
-  const order=await paypalRequest(env,'/v2/checkout/orders',{method:'POST',body:JSON.stringify(orderPayload)});
-  await env.ORDERS.put(`created:${order.id}`,JSON.stringify({id:order.id,lines,totals,customer,createdAt:new Date().toISOString()}),{expirationTtl:86400});
-  return json({id:order.id,status:order.status,totals},200,origin);
+  const orderPayload={intent:'CAPTURE',purchase_units:[{reference_id:'morrow-cart',custom_id:internalOrderId,description:'Morrow & Co. order',amount:{currency_code:'USD',value:amount(totals.total),breakdown:{item_total:{currency_code:'USD',value:amount(totals.itemTotal)},shipping:{currency_code:'USD',value:amount(totals.shipping)},tax_total:{currency_code:'USD',value:amount(totals.tax)}}},items:paypalItems}],application_context:{user_action:'PAY_NOW',shipping_preference:'NO_SHIPPING'}};
+  const order=await paypalRequest(env,'/v2/checkout/orders',{method:'POST',headers:{'PayPal-Request-Id':idempotencyHash},body:JSON.stringify(orderPayload)});
+  const response={id:order.id,internalOrderId,status:order.status,totals};
+  await env.ORDERS.put(`created:${order.id}`,JSON.stringify({internalOrderId,paypalOrderId:order.id,status:'CREATED',lines,totals,customer,createdAt:new Date().toISOString()}),{expirationTtl:86400});
+  await env.ORDERS.put(requestRecordKey,JSON.stringify({requestFingerprint:requestFingerprintValue,response}),{expirationTtl:86400});
+  return json(response,200,origin);
 }
 async function captureOrder(orderId,env,origin){
   const record=await env.ORDERS.get(`created:${orderId}`,'json'); if(!record)return json({error:'Order was not created by this store'},404,origin);
   const existing=await env.ORDERS.get(`captured:${orderId}`,'json'); if(existing)return json(existing,200,origin);
-  const result=await paypalRequest(env,`/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`,{method:'POST',body:'{}'});
+  if(record.status==='CANCELLED')return json({status:'CANCELLED',error:'This order was cancelled'},409,origin);
+  const approved={...record,status:'APPROVED',approvedAt:record.approvedAt||new Date().toISOString()};
+  await env.ORDERS.put(`created:${orderId}`,JSON.stringify(approved),{expirationTtl:86400});
+  const result=await paypalRequest(env,`/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`,{method:'POST',headers:{'PayPal-Request-Id':`capture-${record.internalOrderId}`.slice(0,108)},body:'{}'});
   const capture=result.purchase_units?.[0]?.payments?.captures?.[0];
   const paidAmount=round(Number(capture?.amount?.value));
-  if(result.id!==orderId||result.status!=='COMPLETED'||capture?.status!=='COMPLETED'||capture?.amount?.currency_code!=='USD'||paidAmount!==record.totals.total)return json({status:'NOT_VERIFIED',error:'PayPal capture did not match the expected completed USD amount'},409,origin);
-  const saved={status:'PAID',orderId,captureId:capture.id,amount:paidAmount,currency:'USD',totals:record.totals,lines:record.lines.map(line=>({id:line.id,name:line.product.name,quantity:line.quantity,unitPrice:line.product.price,lineTotal:line.lineTotal})),customer:record.customer,capturedAt:new Date().toISOString(),notifications:{owner:'pending',customer:'pending'}};
+  if(result.id!==orderId||result.status!=='COMPLETED'||capture?.status!=='COMPLETED'||capture?.amount?.currency_code!=='USD'||paidAmount!==record.totals.total){
+    await env.ORDERS.put(`created:${orderId}`,JSON.stringify({...approved,status:'PAYMENT_FAILED',paymentFailure:'PayPal capture did not match the expected completed USD amount',failedAt:new Date().toISOString()}),{expirationTtl:86400});
+    return json({status:'PAYMENT_FAILED',error:'PayPal capture did not match the expected completed USD amount'},409,origin);
+  }
+  const saved={status:'PAID',internalOrderId:record.internalOrderId,orderId,paypalOrderId:orderId,captureId:capture.id,amount:paidAmount,currency:'USD',totals:record.totals,lines:record.lines.map(line=>({id:line.id,name:line.product.name,quantity:line.quantity,unitPrice:line.product.price,lineTotal:line.lineTotal})),customer:record.customer,createdAt:record.createdAt,approvedAt:approved.approvedAt,capturedAt:new Date().toISOString(),notifications:{owner:'pending',customer:'pending'}};
   await env.ORDERS.put(`captured:${orderId}`,JSON.stringify(saved),{expirationTtl:31536000});
   const ownerHtml=`<h2>Morrow &amp; Co. paid order</h2><p><strong>Order:</strong> ${escapeHTML(orderId)}</p><p><strong>Capture:</strong> ${escapeHTML(capture.id)}</p><p><strong>Status:</strong> PAID</p><p><strong>Customer:</strong><br>${customerHTML(record.customer)}</p><h3>Items</h3><ul>${orderLinesHTML(record.lines)}</ul><p><strong>Shipping:</strong> $${amount(record.totals.shipping)}<br><strong>Tax:</strong> $${amount(record.totals.tax)}<br><strong>Total:</strong> $${amount(record.totals.total)}</p>`;
   const customerHtml=`<h2>Thank you for your Morrow &amp; Co. order</h2><p>Your payment for order <strong>${escapeHTML(orderId)}</strong> was verified as PAID.</p><ul>${orderLinesHTML(record.lines)}</ul><p><strong>Shipping:</strong> $${amount(record.totals.shipping)}<br><strong>Tax:</strong> $${amount(record.totals.tax)}<br><strong>Total:</strong> $${amount(record.totals.total)}</p><p>Shipping details:<br>${customerHTML(record.customer)}</p><p>Questions? Reply to this email or contact ${escapeHTML(env.SUPPORT_EMAIL)}.</p>`;
@@ -103,6 +123,14 @@ async function captureOrder(orderId,env,origin){
   try{saved.notifications.customer=(await sendEmail(env,{to:record.customer.email,subject:`Morrow & Co. order ${orderId}`,replyTo:env.SUPPORT_EMAIL,html:customerHtml})).status}catch{saved.notifications.customer='failed'}
   await env.ORDERS.put(`captured:${orderId}`,JSON.stringify(saved),{expirationTtl:31536000});
   return json(saved,200,origin);
+}
+async function cancelOrder(orderId,env,origin){
+  const record=await env.ORDERS.get(`created:${orderId}`,'json'); if(!record)return json({error:'Order was not created by this store'},404,origin);
+  const existing=await env.ORDERS.get(`captured:${orderId}`,'json'); if(existing)return json(existing,409,origin);
+  if(record.status==='PAID')return json({status:'PAID',error:'A paid order cannot be cancelled'},409,origin);
+  const cancelled={...record,status:'CANCELLED',cancelledAt:record.cancelledAt||new Date().toISOString()};
+  await env.ORDERS.put(`created:${orderId}`,JSON.stringify(cancelled),{expirationTtl:86400});
+  return json({status:'CANCELLED',internalOrderId:record.internalOrderId,paypalOrderId:orderId},200,origin);
 }
 export default {async fetch(request,env){
   const origin=originFor(request,env);
@@ -123,6 +151,11 @@ export default {async fetch(request,env){
     if(match&&request.method==='POST'){
       const missing=paymentMissing(env); if(missing.length)return json({error:'Payment backend is not configured',missing},503,origin);
       return await captureOrder(match[1],env,origin);
+    }
+    const cancelMatch=url.pathname.match(/^\/api\/orders\/([^/]+)\/cancel$/);
+    if(cancelMatch&&request.method==='POST'){
+      const missing=paymentMissing(env); if(missing.length)return json({error:'Payment backend is not configured',missing},503,origin);
+      return await cancelOrder(cancelMatch[1],env,origin);
     }
     return json({error:'Not found'},404,origin);
   }catch(error){return json({error:error.message||'Request failed'},400,origin)}

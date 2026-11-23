@@ -24,6 +24,9 @@ assert.match(read('checkout.html'),/checkout\.js/,'checkout page must load check
 assert.match(read('checkout.js'),/createOrder/,'checkout must implement PayPal createOrder path');
 assert.match(read('checkout.js'),/enable-funding=card/,'checkout must request eligible PayPal card funding');
 assert.match(read('backend/worker.js'),/v2\/checkout\/orders/,'backend must use PayPal Orders API');
+assert.match(read('backend/worker.js'),/Idempotency-Key/,'backend must protect order creation with idempotency');
+assert.match(read('backend/worker.js'),/status:'CANCELLED'/,'backend must persist cancellation state');
+assert.match(read('checkout.js'),/Idempotency-Key/,'checkout must send an idempotency key');
 assert.match(read('backend/worker.js'),/api\/contact/,'backend must expose the support endpoint');
 assert.match(read('policies.html'),/contact-form/,'policies page must expose the support form');
 assert.match(read('contact.js'),/bahae6593@gmail.com|supportEmail/,'support form must target the configured support destination');

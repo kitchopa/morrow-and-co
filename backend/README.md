@@ -12,6 +12,10 @@ This Cloudflare Worker is the server-side half of the multi-item PayPal flow. It
 - A second KV namespace bound as `LIMITS` for contact-form rate limiting.
 - `RESEND_API_KEY` as a Wrangler secret, `RESEND_FROM` using a sender address on a verified store-owned domain, and `SUPPORT_EMAIL=bahae6593@gmail.com`.
 
+The example keeps `SHIPPING_AMOUNT` and `TAX_AMOUNT` blank on purpose. Do not replace them with `0.00` unless the store owner has explicitly approved those values.
+
+Order records use `CREATED`, `APPROVED`, `PAID`, `PAYMENT_FAILED`, and `CANCELLED` states. Create-order and capture requests use PayPal/KV idempotency keys; a checkout cancellation can mark an unpaid order `CANCELLED` without presenting a payment success state.
+
 ## Deployment outline
 
 1. Copy `wrangler.toml.example` to `wrangler.toml` outside the public static site configuration and replace the KV IDs.
@@ -21,6 +25,6 @@ This Cloudflare Worker is the server-side half of the multi-item PayPal flow. It
 5. Verify the sender domain with Resend (SPF/DKIM as required) before sending customer or owner email.
 6. Run a sandbox transaction containing at least three products with different quantities.
 7. Submit a contact request from the deployed form and verify arrival in `bahae6593@gmail.com`.
-8. Confirm `/api/health`, PayPal capture status `COMPLETED`, one captured KV record, no second capture on refresh/retry, and separate owner/customer email statuses before considering the flow production-ready.
+8. Confirm `/api/health`, PayPal capture status `COMPLETED`, one captured KV record, no second capture or order creation on refresh/retry, cancellation/failure states, and separate owner/customer email statuses before considering the flow production-ready.
 
-The Worker validates every product and price from its own catalog. The browser cannot set a price, shipping amount, tax amount, or payment-success state.
+The Worker validates every product and price from its own catalog. The browser cannot set a price, shipping amount, tax amount, or payment-success state. PayPal webhook reconciliation is not enabled in this version because a webhook ID and signature-verification configuration have not been supplied.

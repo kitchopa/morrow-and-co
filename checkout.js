@@ -5,6 +5,15 @@ const money=value=>`$${Number(value).toFixed(2)}`;
 const productById=id=>products.find(product=>product.id===Number(id));
 const escapeHTML=value=>String(value??'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
 let cart=readCart();
+const checkoutSessionId=(()=>{
+  try{
+    const existing=sessionStorage.getItem('morrow-checkout-session');
+    if(existing)return existing;
+    const created=crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    sessionStorage.setItem('morrow-checkout-session',created);
+    return created;
+  }catch{return `${Date.now()}-${Math.random().toString(16).slice(2)}`}
+})();
 
 function readCart(){
   try{
@@ -43,6 +52,7 @@ function validateForm(){
   if(!valid)form.querySelector('[aria-invalid="true"]')?.focus(); return valid;
 }
 function apiUrl(path){return `${String(config.apiBase).replace(/\/$/,'')}${path}`}
+function idempotencyKey(){return `${checkoutSessionId}:${cart.map(item=>`${item.id}x${item.qty}`).join(',')}:${String(document.querySelector('[name="email"]')?.value||'').trim().toLowerCase()}`}
 function loadPayPal(){
   if(window.paypal){mountPayPal();return}
   const script=document.createElement('script');
@@ -55,7 +65,7 @@ function mountPayPal(){
     onClick:()=>validateForm(),
     createOrder:async()=>{
       if(!validateForm())throw new Error('Customer information is incomplete');
-      const response=await fetch(apiUrl('/api/orders'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:cart,customer:formData()})});
+      const response=await fetch(apiUrl('/api/orders'),{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':idempotencyKey()},body:JSON.stringify({items:cart,customer:formData()})});
       if(!response.ok)throw new Error('Unable to create PayPal order');
       const data=await response.json(); if(!data.id)throw new Error('PayPal order ID missing'); return data.id;
     },
@@ -65,7 +75,7 @@ function mountPayPal(){
       if(!response.ok||result.status!=='COMPLETED')throw new Error('Payment was not verified as completed');
       showConfirmation(data.orderID,result);
     },
-    onCancel:()=>showCheckoutMessage('Payment was cancelled. Your bag is still saved.'),
+    onCancel:data=>{if(data?.orderID)fetch(apiUrl(`/api/orders/${encodeURIComponent(data.orderID)}/cancel`),{method:'POST'}).catch(()=>{});showCheckoutMessage('Payment was cancelled. Your bag is still saved.')},
     onError:error=>showCheckoutMessage(error?.message||'PayPal could not complete this payment. No success was recorded.')
   }).render('#paypal-button-container');
 }

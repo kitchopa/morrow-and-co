@@ -5,8 +5,12 @@ compatibility_date = "2026-11-23"
 [vars]
 ALLOWED_ORIGIN = "https://kitchopa.github.io"
 PAYPAL_API_BASE = "https://api-m.sandbox.paypal.com"
-SHIPPING_AMOUNT = "0.00"
-TAX_AMOUNT = "0.00"
+# Deliberately blank until the owner approves shipping and tax rules.
+SHIPPING_AMOUNT = ""
+TAX_AMOUNT = ""
+# The support destination is supplied by the store owner.
+SUPPORT_EMAIL = "bahae6593@gmail.com"
+RESEND_FROM = "Morrow & Co. Support <support@verified-store-domain.example>"
 
 [[kv_namespaces]]
 binding = "ORDERS"
@@ -17,10 +21,6 @@ preview_id = "replace-with-preview-kv-id"
 binding = "LIMITS"
 id = "replace-with-rate-limit-kv-id"
 preview_id = "replace-with-rate-limit-preview-kv-id"
-
-# The support destination is supplied by the store owner.
-SUPPORT_EMAIL = "bahae6593@gmail.com"
-RESEND_FROM = "Morrow & Co. Support <support@verified-store-domain.example>"
 
 # Set these with `wrangler secret put`; never commit them:
 # PAYPAL_CLIENT_ID
