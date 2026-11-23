@@ -20,6 +20,7 @@
       <nav aria-label="Main navigation">
         <a href="#shop">Shop</a><a href="#story">Our story</a><a href="#rituals">Rituals</a>
       </nav>
+      <label class="site-search"><span class="sr-only">Search products</span><input id="search-input" type="search" placeholder="Search" autocomplete="off" /></label>
       <button class="cart-trigger" aria-label="Open shopping bag">Bag <span id="cart-count">0</span></button>
     </header>
 
@@ -53,7 +54,7 @@
       <section class="newsletter"><p class="eyebrow">SLOWER, BETTER MAIL</p><h2>A little good news<br>for your inbox.</h2><p>New drops, useful ideas, and 10% off your first order.</p><form id="newsletter-form"><label class="sr-only" for="email">Your email address</label><input id="email" type="email" placeholder="Your email address" required /><button class="button dark" type="submit">Sign me up <span>→</span></button></form><p class="form-message" id="form-message"></p></section>
     </main>
 
-    <footer><a class="logo" href="#top">morrow<span>&amp;</span>co.</a><p>Tools for a softer, sharper everyday.</p><div><a href="#shop">Shop</a><a href="#story">About</a><a href="mailto:hello@morrowandco.com">Contact</a></div><small>© 2026 Morrow & Co. Built with care.</small></footer>
+    <footer><a class="logo" href="#top">morrow<span>&amp;</span>co.</a><p>Tools for a softer, sharper everyday.</p><div><a href="#shop">Shop</a><a href="#story">About</a><a href="mailto:hello@morrowandco.com">Contact</a></div><div class="footer-details"><details><summary>Shipping</summary><p>Shipping options and delivery timing are shown by PayPal at checkout and vary by destination.</p></details><details><summary>Returns</summary><p>Return instructions will be confirmed by Morrow &amp; Co. before launch. Contact us before sending anything back.</p></details><details><summary>FAQ</summary><p>Need help? Email <a href="mailto:hello@morrowandco.com">hello@morrowandco.com</a>.</p></details></div><small>© 2026 Morrow & Co. Built with care. Privacy and terms are being finalized.</small></footer>
 
     <aside class="cart-drawer" aria-label="Shopping bag" aria-hidden="true"><div class="cart-head"><h2>Your bag <span id="drawer-count">(0)</span></h2><button class="close-cart" aria-label="Close shopping bag">×</button></div><div id="cart-items" class="cart-items"><p class="empty-state">Your bag is waiting for something good.</p></div><div class="cart-footer"><div class="subtotal"><span>Subtotal</span><strong id="subtotal">$0.00</strong></div><small>Taxes and shipping calculated at checkout.</small><button id="checkout" class="button dark wide">Secure checkout <span>→</span></button></div></aside><div class="overlay"></div>
     <dialog class="product-dialog" id="product-dialog"><button class="dialog-close" aria-label="Close product details">×</button><div id="product-detail"></div></dialog>
