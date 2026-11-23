@@ -106,6 +106,7 @@ async function captureOrder(orderId,env,origin){
   const record=await env.ORDERS.get(`created:${orderId}`,'json'); if(!record)return json({error:'Order was not created by this store'},404,origin);
   const existing=await env.ORDERS.get(`captured:${orderId}`,'json'); if(existing)return json(existing,200,origin);
   if(record.status==='CANCELLED')return json({status:'CANCELLED',error:'This order was cancelled'},409,origin);
+  if(record.status==='PAYMENT_FAILED')return json({status:'PAYMENT_FAILED',error:'This order has already failed payment verification'},409,origin);
   const approved={...record,status:'APPROVED',approvedAt:record.approvedAt||new Date().toISOString()};
   await env.ORDERS.put(`created:${orderId}`,JSON.stringify(approved),{expirationTtl:86400});
   const result=await paypalRequest(env,`/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`,{method:'POST',headers:{'PayPal-Request-Id':`capture-${record.internalOrderId}`.slice(0,108)},body:'{}'});
@@ -137,7 +138,7 @@ export default {async fetch(request,env){
   if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{'access-control-allow-origin':origin,'access-control-allow-credentials':'true','access-control-allow-methods':'POST,GET,OPTIONS','access-control-allow-headers':'content-type','vary':'Origin'}});
   if(!validOrigin(request,env))return json({error:'Origin not allowed'},403,origin);
   const url=new URL(request.url);
-  if(url.pathname==='/'&&request.method==='GET')return json({ok:true,service:'morrow-co-payments',environment:'sandbox',health:'/api/health'},200,origin);
+  if(url.pathname==='/'&&request.method==='GET')return json({ok:true,service:'morrow-co-payments',environment:(env.PAYPAL_API_BASE||'').includes('sandbox')?'sandbox':'live',health:'/api/health'},200,origin);
   if(url.pathname==='/api/health'&&request.method==='GET')return json({ok:true,paymentConfigured:paymentMissing(env).length===0,contactConfigured:contactMissing(env).length===0,paymentMissing:paymentMissing(env),contactMissing:contactMissing(env)},200,origin);
   try{
     if(url.pathname==='/api/contact'&&request.method==='POST'){
