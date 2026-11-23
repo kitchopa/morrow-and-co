@@ -1,0 +1,7 @@
+# Local Cloudflare/Wrangler configuration and secrets
+backend/wrangler.toml
+backend/.dev.vars
+.wrangler/
+.env
+.env.*
+!.env.example
