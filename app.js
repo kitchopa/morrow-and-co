@@ -96,7 +96,7 @@ document.addEventListener('click',event=>{
   const add=target.closest('[data-add]'); if(add){addToCart(Number(add.dataset.add));return}
   const detailAdd=target.closest('[data-detail-add]'); if(detailAdd){addToCart(Number(detailAdd.dataset.detailAdd),Number(document.querySelector('#detail-qty')?.value)||1);document.querySelector('#product-dialog').close();return}
   const detailQty=target.closest('[data-detail-qty]'); if(detailQty){const input=document.querySelector('#detail-qty');input.value=Math.max(1,Math.min(99,(Number(input.value)||1)+Number(detailQty.dataset.detailQty)));return}
-  const detail=target.closest('[data-detail]'); if(detail&&!target.closest('button')){showDetails(detail.dataset.detail);return}
+  const detail=target.closest('[data-detail]'); if(detail&&(!target.closest('button')||target.closest('.related-card'))){showDetails(detail.dataset.detail);return}
   const image=target.closest('[data-expand-image]'); if(image){openExpandedImage(image.dataset.expandImage,image.dataset.expandAlt);return}
   const qty=target.closest('[data-qty]'); if(qty){changeQuantity(qty.dataset.qty,qty.dataset.change);return}
   const remove=target.closest('[data-remove]'); if(remove){removeFromCart(remove.dataset.remove);return}
