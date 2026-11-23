@@ -21,5 +21,9 @@ assert.match(read('app.js'),/checkout\.html/,'home page checkout action must rou
 assert.match(read('checkout.html'),/checkout\.js/,'checkout page must load checkout behavior');
 assert.match(read('checkout.js'),/createOrder/,'checkout must implement PayPal createOrder path');
 assert.match(read('backend/worker.js'),/v2\/checkout\/orders/,'backend must use PayPal Orders API');
+assert.match(read('backend/worker.js'),/api\/contact/,'backend must expose the support endpoint');
+assert.match(read('policies.html'),/contact-form/,'policies page must expose the support form');
+assert.match(read('contact.js'),/bahae6593@gmail.com|supportEmail/,'support form must target the configured support destination');
 assert.doesNotMatch(read('checkout-config.js'),/PAYPAL_CLIENT_SECRET|client_secret/i,'frontend config must not contain PayPal secrets');
+assert.doesNotMatch(read('contact-config.js'),/RESEND_API_KEY|PAYPAL_CLIENT_SECRET|client_secret/i,'frontend contact config must not contain secrets');
 console.log(JSON.stringify({products:products.length,paypalFallbacks:Object.keys(paypalLinks).length,assets:'16/16',checkout:'multi-item review implemented',backend:'server-side PayPal Orders/Capture scaffold'}));

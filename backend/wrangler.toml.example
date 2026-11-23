@@ -13,6 +13,16 @@ binding = "ORDERS"
 id = "replace-with-production-kv-id"
 preview_id = "replace-with-preview-kv-id"
 
+[[kv_namespaces]]
+binding = "LIMITS"
+id = "replace-with-rate-limit-kv-id"
+preview_id = "replace-with-rate-limit-preview-kv-id"
+
+# The support destination is supplied by the store owner.
+SUPPORT_EMAIL = "bahae6593@gmail.com"
+RESEND_FROM = "Morrow & Co. Support <support@verified-store-domain.example>"
+
 # Set these with `wrangler secret put`; never commit them:
 # PAYPAL_CLIENT_ID
 # PAYPAL_CLIENT_SECRET
+# RESEND_API_KEY
