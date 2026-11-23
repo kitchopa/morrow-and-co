@@ -1,9 +1,9 @@
 const products=[
  {id:1,name:'Cloud Sleep Mask',cat:'wellbeing',price:24,tag:'Best seller',desc:'Weighted rest',image:'https://images.unsplash.com/photo-1617994452722-4145e196248b?auto=format&fit=crop&w=700&q=85',supplierUrl:'https://cjdropshipping.com/product/sleep-mask-brightening-deep-hydrating-p-2408050136001610400.html',shippingNote:'CJ quote checked for US: $5.48 shipping; other destinations vary.',paypalUrl:'https://www.paypal.com/ncp/payment/TJSUNV3FF9APG'},
  {id:2,name:'Sip Everywhere Bottle',cat:'on-the-go',price:32,tag:'New',desc:'A calm, insulated carry for water on the move.',image:'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=700&q=85',paypalUrl:'https://www.paypal.com/ncp/payment/KAG9YC2BKGAX6'},
- {id:3,name:'Rise & Rest Light',cat:'wellbeing',price:48,tag:'',desc:'Warm ambient glow',image:'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=700&q=85'},
- {id:4,name:'The Tidy Tray',cat:'home',price:28,tag:'Small batch',desc:'A simple landing place for the little things.',image:'https://images.unsplash.com/photo-1593062096033-9a26b09da705?auto=format&fit=crop&w=700&q=85'},
- {id:5,name:'Pocket Power Bank',cat:'on-the-go',price:39,tag:'',desc:'10,000 mAh',image:'https://images.unsplash.com/photo-1609592806596-b43bf3e08b1d?auto=format&fit=crop&w=700&q=85'},
+ {id:3,name:'Rise & Rest Light',cat:'wellbeing',price:48,tag:'',desc:'Warm ambient glow',image:'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=700&q=85',paypalUrl:'https://www.paypal.com/ncp/payment/ALESK97UA37CN'},
+ {id:4,name:'The Tidy Tray',cat:'home',price:28,tag:'Small batch',desc:'A simple landing place for the little things.',image:'https://images.unsplash.com/photo-1593062096033-9a26b09da705?auto=format&fit=crop&w=700&q=85',paypalUrl:'https://www.paypal.com/ncp/payment/9YG62HAE2Q3H6'},
+ {id:5,name:'Pocket Power Bank',cat:'on-the-go',price:39,tag:'',desc:'10,000 mAh',image:'https://images.unsplash.com/photo-1609592806596-b43bf3e08b1d?auto=format&fit=crop&w=700&q=85',paypalUrl:'https://www.paypal.com/ncp/payment/686WRV2E3LTKW'},
  {id:6,name:'Pebble Massage Ball',cat:'wellbeing',price:18,tag:'',desc:'For your reset',image:'https://images.unsplash.com/photo-1599443015574-be5fe8a05783?auto=format&fit=crop&w=700&q=85'},
  {id:7,name:'Foldaway Market Tote',cat:'on-the-go',price:22,tag:'',desc:'Takes up no space',image:'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=700&q=85'},
  {id:8,name:'Soft Focus Timer',cat:'home',price:26,tag:'',desc:'Time, gently',details:'A quiet visual timer that lets you make room for focus without watching your phone.',features:['Silent countdown','Clear visual dial','60-minute range'],image:'https://images.unsplash.com/photo-1501139083538-0139583c060f?auto=format&fit=crop&w=900&q=90'},
@@ -38,7 +38,7 @@ products.forEach((product,index)=>product.image=productImages[index%productImage
 
 // Paste your Stripe Payment Link between the quotes after completing Stripe verification.
 // A Payment Link is safe to publish; never paste a Stripe secret key in this file.
-const PAYPAL_LINKS_READY=2;
+const PAYPAL_LINKS_READY=5;
 let cart=JSON.parse(localStorage.getItem('morrow-cart')||'[]');let filter='all';
 const grid=document.querySelector('#product-grid'); const money=n=>`$${n.toFixed(2)}`;
 function renderProducts(){let list=filter==='all'?products:products.filter(p=>p.cat===filter);grid.innerHTML=list.map(p=>`<article class="product"><div class="product-image" data-detail="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<img src="${p.image}" alt="${p.name}" loading="lazy"><button class="button dark quick-add" data-id="${p.id}">Add to bag <span>+</span></button></div><div class="product-info"><div><h3>${p.name}</h3><p>${p.desc}</p></div><strong>${money(p.price)}</strong></div></article>`).join('')}
